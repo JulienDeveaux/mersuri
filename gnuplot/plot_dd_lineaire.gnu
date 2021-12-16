@@ -14,7 +14,6 @@ poisson(k) = lambda ** k * exp(-lambda) / gamma(k + 1)
 # on va fitter une fonction linéaire en log-log
 
 f(x) = lc - gamma * x
-#fit f(x) 'dd_dblp.dat' using (log($1)):(log($2)) via lc, gamma
 fit f(x) 'dd_dblp.dat' using (log($1)):(log($2)) via lc, gamma
 
 c = exp(lc)

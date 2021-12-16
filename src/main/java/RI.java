@@ -1,4 +1,5 @@
 import org.graphstream.algorithm.ConnectedComponents;
+import org.graphstream.algorithm.Toolkit;
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -7,9 +8,13 @@ import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceEdge;
 
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class RI {
     protected static String styleSheet =
@@ -29,7 +34,7 @@ public class RI {
                     "   text-size: 20px;" +
                     "}";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Graph graph = new DefaultGraph("graph");
         graph.setAttribute("ui.stylesheet", styleSheet);
         System.setProperty("org.graphstream.ui", "swing");
@@ -81,7 +86,9 @@ public class RI {
         }
 
 
-        int nbNoeudsParcours = 1000;
+        int nbNoeudsParcours = 1;
+        List<Integer> distanceDistribution = new ArrayList<>();
+        int tailleMaxDistance = 0;
         List<Node> list = new LinkedList<>();   // Liste des nbNoeudsParcours noeuds aléatoires
         for(int i = 0; i < nbNoeudsParcours+1; i++) {
             int r = (int) (Math.random() * graph.getNodeCount());
@@ -99,6 +106,10 @@ public class RI {
             }
             for(int j = 0; j < graph.getNodeCount(); j++) {
                 distanceMoyenne += breadthFirstIterator.getDepthOf(graph.getNode(j));
+                distanceDistribution.add(breadthFirstIterator.getDepthOf(graph.getNode(j)));
+                if(breadthFirstIterator.getDepthOf(graph.getNode(j)) > tailleMaxDistance) {
+                    tailleMaxDistance = breadthFirstIterator.getDepthOf(graph.getNode(j));
+                }
             }
         }
         distanceMoyenne = distanceMoyenne/(list.size()*graph.getNodeCount());
@@ -107,9 +118,23 @@ public class RI {
         System.out.println("Dmax : " + Math.log(graph.getNodeCount())/Math.log(degreMoyen));
 
         float eulerConstant = (float) 0.5772156649015328606065120900824024310421;
-        double distanceMoyenneRandom = 0;
-        distanceMoyenneRandom = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2;
+        double distanceMoyenneRandom = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2f;
         System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneRandom);
+
+
+        /*int[] barreGraphData = new int[tailleMaxDistance+1];
+        for(int i = 0; i < distanceDistribution.size(); i++) {
+            barreGraphData[distanceDistribution.get(i)]++;
+        }
+        FileWriter fw = new FileWriter("/home/julien/Documents/M1/Réseau Interaction/mesureri/gnuplot/dd_dblp_dist.dat");
+        String txt = "";
+        for (int k = 0; k < tailleMaxDistance; k++) {
+            if (distanceDistribution.get(k) != 0) {
+                txt += String.format("%d %d\n", k, barreGraphData[k]);
+            }
+        }
+        fw.write(txt);
+        fw.close();*/
     }
 }
         /*Nombre de nœuds : N

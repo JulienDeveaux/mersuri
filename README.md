@@ -25,7 +25,7 @@ GraphStream permet de mesurer de nombreuses caractéristiques d'un réseau. La p
 
 - Le réseau a une composante connexe.
 - Le réseau aléatoire de la même taille et de degré moyen identique au réseau donné ne sera pas connexe parce que pour avoir une composante géante et donc une composante connexe, il faut que le degré moyen (6.22) soit supérieur au log du nombre de noeuds (12.66).
-- Pour qu'il soit connexe, il faudrait donc que le degré moyen ait un degré supérieur à 12.66
+- Pour qu'il soit connexe, il faudrait donc que le degré moyen ait un degré supérieur à 12.66.
 
 4. Calculez la distribution des degrés et tracez-la avec `gnuplot` (ou avec votre outil préféré) d'abord en échelle linéaire, ensuite en échelle log-log. Est-ce qu'on observe une ligne droite en log-log ? Que cela nous indique ? Tracez la distribution de Poisson avec la même moyenne pour comparaison. Utilisez la commande `fit` de `gnuplot` pour trouver les coefficients de la loi de puissance et tracez-la.
 
@@ -60,12 +60,32 @@ En traçant la distribution de degrés en échelle linéaire on observe une lign
 
 5. Maintenant on va calculer la distance moyenne dans le réseau. Le calcul des plus courts chemins entre toutes les paires de nœuds prendra plusieurs heures pour cette taille de réseau. C'est pourquoi on va estimer la distance moyenne par échantillonnage en faisant un parcours en largeur à partir de 1000 sommets choisis au hasard. L'hypothèse des six degrés de séparation se confirme-t-elle ? Est-ce qu'il s'agit d'un réseau petit monde ? Quelle sera la distance moyenne dans un réseau aléatoire avec les mêmes caractéristiques ? Tracez également la *distribution* des distances. Formulez une hypothèse sur la loi de cette distribution.
 
-    **DOING**
+    **DONE**
 
 - Nous obtenons une distance moyenne dans le réseau entre **6,3** et **7** (en faisant tourner 5 fois le programme).
 - L'hypothèse des 6 degrés de séparation semble donc se confirmer.
-- La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne 6.7 \pm 6.2 -> le réseau est donc petit monde
-- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d_r = (log(N) - \gamma)/(log(<k>) + 1/2`$
+- La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne 6.7 $`\pm`$ 6.2 -> le réseau est donc petit monde.
+- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d_r = (log(N) - \gamma)/(log(<k>) + 1/2`$ avec $`\gamma`$ la constante d'Euler $`\pm`$ 0.57722.
+
+Pour tracer le graphique de la distribution des distances, nous allons cette fois utiliser ce code-ci, pour avoir la somme des distances en fonction de leur apparition : 
+```java
+    int[] barreGraphData = new int[tailleMaxDistance+1];
+    for(int i = 0; i < distanceDistribution.size(); i++) {
+        barreGraphData[distanceDistribution.get(i)]++;
+    }
+    FileWriter fw = new FileWriter("../../../gnuplot/dd_dblp_dist.dat");
+    String txt = "";
+    for (int k = 0; k < tailleMaxDistance; k++) {
+        if (distanceDistribution.get(k) != 0) {
+            txt += String.format("%d %d\n", k, barreGraphData[k]);
+        }
+    }
+    fw.write(txt);
+    fw.close();
+```
+Nous obtenons ce graphique :
+![distribution des distances en fonction de leur occurence](/gnuplot/dd_dblp_distance.png)
+- Nous pouvons donc formuler l'hypothèse, en regardant ce graphique, que la distribution des distances suit une loi de poisson.
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
 
