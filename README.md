@@ -65,7 +65,7 @@ En traçant la distribution de degrés en échelle linéaire on observe une lign
 - Nous obtenons une distance moyenne dans le réseau entre **6,3** et **7** (en faisant tourner 5 fois le programme).
 - L'hypothèse des 6 degrés de séparation semble donc se confirmer.
 - La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne 6.7 \pm 6.2 -> le réseau est donc petit monde
-- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d_rand = (log(N) - \gamma)/(log(<k>) + 1/2`$
+- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d_r = (log(N) - \gamma)/(log(<k>) + 1/2`$
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
 
