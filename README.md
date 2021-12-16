@@ -1,5 +1,3 @@
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 # Mesures de réseaux d'interaction
 
 Nous allons analyser un réseau de collaboration scientifique en informatique. Le réseau est extrait de DBLP et disponible sur [SNAP](https://snap.stanford.edu/data/com-DBLP.html).
@@ -58,7 +56,7 @@ En traçant la distribution de degrés en échelle linéaire on observe une lign
 
    ![distribution des degrés linéaire](/gnuplot/dd_dblp_lineaire.png)
 
-    On a $`\gamma = 2.7 \pm 0.04`$
+   On a $`\gamma = 2.7 \pm 0.04`$
 
 5. Maintenant on va calculer la distance moyenne dans le réseau. Le calcul des plus courts chemins entre toutes les paires de nœuds prendra plusieurs heures pour cette taille de réseau. C'est pourquoi on va estimer la distance moyenne par échantillonnage en faisant un parcours en largeur à partir de 1000 sommets choisis au hasard. L'hypothèse des six degrés de séparation se confirme-t-elle ? Est-ce qu'il s'agit d'un réseau petit monde ? Quelle sera la distance moyenne dans un réseau aléatoire avec les mêmes caractéristiques ? Tracez également la *distribution* des distances. Formulez une hypothèse sur la loi de cette distribution.
 
@@ -66,8 +64,8 @@ En traçant la distribution de degrés en échelle linéaire on observe une lign
 
 - Nous obtenons une distance moyenne dans le réseau entre **6,3** et **7** (en faisant tourner 5 fois le programme).
 - L'hypothèse des 6 degrés de séparation semble donc se confirmer.
-- La formule Dmax \pm log(N)/log(< k >) nous donne 6.7 \pm 6.2 -> le réseau est donc petit monde
-- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule \\(d_{rand} = \frac{\ln{N} - \gamma}{\ln{\langle k \rangle}} + \frac{1}{2}\\)
+- La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne 6.7 \pm 6.2 -> le réseau est donc petit monde
+- La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d<sub>rand</sub> = (log(N) - \gamma)/(log(<k>) + 1/2`$
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
 
