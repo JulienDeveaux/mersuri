@@ -54,7 +54,7 @@ GraphStream permet de mesurer de nombreuses caractéristiques d'un réseau. La p
 
 En traçant la distribution de degrés en échelle linéaire on observe une ligne courbe avec des valeurs très élevées au départ mais qui tend rapidement vers 0.
 
-   ![distribution des degrés linéaire](/gnuplot/dd_dblp_distrib_distance.png)
+   ![distribution des degrés linéaire](/gnuplot/dd_dblp_lineaire.png)
 
    On a $`\gamma = 2.7 \pm 0.04`$
 
@@ -84,7 +84,7 @@ Pour tracer le graphique de la distribution des distances, nous allons cette foi
     fw.close();
 ```
 Nous obtenons ce graphique :
-![distribution des distances en fonction de leur occurence](/gnuplot/dd_dblp_distance.png)
+![distribution des distances en fonction de leur occurence](/gnuplot/dd_dblp_distrib_distance.png)
 - Nous pouvons donc formuler l'hypothèse, en regardant ce graphique, que la distribution des distances suit une loi de poisson.
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
