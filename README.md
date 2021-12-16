@@ -54,7 +54,7 @@ GraphStream permet de mesurer de nombreuses caractéristiques d'un réseau. La p
 
 En traçant la distribution de degrés en échelle linéaire on observe une ligne courbe avec des valeurs très élevées au départ mais qui tend rapidement vers 0.
 
-   ![distribution des degrés linéaire](/gnuplot/dd_dblp_lineaire.png)
+   ![distribution des degrés linéaire](/gnuplot/dd_dblp_distrib_distance.png)
 
    On a $`\gamma = 2.7 \pm 0.04`$
 
