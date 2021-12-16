@@ -1,20 +1,15 @@
 import org.graphstream.algorithm.ConnectedComponents;
-import org.graphstream.algorithm.Toolkit;
-import org.graphstream.graph.Edge;
+import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
-import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.stream.GraphParseException;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceEdge;
-import org.graphstream.stream.file.FileSourceFactory;
 
-import javax.swing.*;
+
 import java.io.IOException;
-import java.util.Locale;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
+import java.util.LinkedList;
+import java.util.List;
 
 public class RI {
     protected static String styleSheet =
@@ -34,7 +29,7 @@ public class RI {
                     "   text-size: 20px;" +
                     "}";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Graph graph = new DefaultGraph("graph");
         graph.setAttribute("ui.stylesheet", styleSheet);
         System.setProperty("org.graphstream.ui", "swing");
@@ -84,7 +79,37 @@ public class RI {
         } else {
             System.out.println("Le graph aléatoire de même taille et degré moyen est pas connexe");
         }
-        System.out.println(Math.log(graph.getNodeCount()));
+
+
+        int nbNoeudsParcours = 1000;
+        List<Node> list = new LinkedList<>();   // Liste des nbNoeudsParcours noeuds aléatoires
+        for(int i = 0; i < nbNoeudsParcours+1; i++) {
+            int r = (int) (Math.random() * graph.getNodeCount());
+            if(list.contains(graph.getNode(r))) {       // Evite les doublons
+                i--;
+            } else {
+                list.add(graph.getNode(r));
+            }
+        }
+        double distanceMoyenne = 0;
+        for(int i = 0; i < nbNoeudsParcours+1; i++) {
+            BreadthFirstIterator breadthFirstIterator = new BreadthFirstIterator(list.get(i));
+            while(breadthFirstIterator.hasNext()) {
+                breadthFirstIterator.next();
+            }
+            for(int j = 0; j < graph.getNodeCount(); j++) {
+                distanceMoyenne += breadthFirstIterator.getDepthOf(graph.getNode(j));
+            }
+        }
+        distanceMoyenne = distanceMoyenne/(list.size()*graph.getNodeCount());
+        System.out.println("Distance moyenne dans le réseau : " + distanceMoyenne);
+
+        System.out.println("Dmax : " + Math.log(graph.getNodeCount())/Math.log(degreMoyen));
+
+        float eulerConstant = (float) 0.5772156649015328606065120900824024310421;
+        double distanceMoyenneRandom = 0;
+        distanceMoyenneRandom = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2;
+        System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneRandom);
     }
 }
         /*Nombre de nœuds : N
