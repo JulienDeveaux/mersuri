@@ -10,7 +10,6 @@ GraphStream permet de mesurer de nombreuses caractéristiques d'un réseau. La p
 
 2. Prenez quelques mesures de base: nombre de nœuds et de liens, degré moyen, coefficient de clustering. Quel sera le coefficient de clustering pour un réseau aléatoire de la même taille et du même degré moyen ?
 
-    **DONE**
 - nombre de noeuds : 317080
 - nombre de liens : 1049866
 - degré moyen : 6.622089
@@ -18,18 +17,13 @@ GraphStream permet de mesurer de nombreuses caractéristiques d'un réseau. La p
 - coefficient de clustering du réseau aléatoire : 2.08846*10<sup>-5</sup>
 - Nous observons que le coefficient de clustering moyen pour le réseau aléatoire est beaucoup plus faible que celui du réseau donné. Cela est dûe au fait que les liens entre les noeuds du réseau aléatoire ne sont forcément connectés ensemble. Cela a pour conséquence de faire un réseau très disparate et peu connecté, et donc disposant de peu de clusters.
 
-
 3. Le réseau est-il connexe ? Un réseau aléatoire de la même taille et degré moyen sera-t-il connexe ? À partir de quel degré moyen un réseau aléatoire avec cette taille devient connexe ?
-
-    **DONE**
 
 - Le réseau a une composante connexe.
 - Le réseau aléatoire de la même taille et de degré moyen identique au réseau donné ne sera pas connexe parce que pour avoir une composante géante et donc une composante connexe, il faut que le degré moyen (6.22) soit supérieur au log du nombre de noeuds (12.66).
 - Pour qu'il soit connexe, il faudrait donc que le degré moyen ait un degré supérieur à 12.66.
 
 4. Calculez la distribution des degrés et tracez-la avec `gnuplot` (ou avec votre outil préféré) d'abord en échelle linéaire, ensuite en échelle log-log. Est-ce qu'on observe une ligne droite en log-log ? Que cela nous indique ? Tracez la distribution de Poisson avec la même moyenne pour comparaison. Utilisez la commande `fit` de `gnuplot` pour trouver les coefficients de la loi de puissance et tracez-la.
-
-    **DONE**
 
     La distribution de degrés $`p_k = \frac{N_k}{N}`$ est la probabilité qu'un nœud choisi au hasard ait degré $`k`$. On peut utiliser [`Toolkit.degreeDistribution()`](https://data.graphstream-project.org/api/gs-algo/current/org/graphstream/algorithm/Toolkit.html#degreeDistribution(org.graphstream.graph.Graph)) pour obtenir $`N_k`$ et normaliser par la suite :
 
@@ -60,11 +54,9 @@ En traçant la distribution de degrés en échelle linéaire on observe une lign
 
 5. Maintenant on va calculer la distance moyenne dans le réseau. Le calcul des plus courts chemins entre toutes les paires de nœuds prendra plusieurs heures pour cette taille de réseau. C'est pourquoi on va estimer la distance moyenne par échantillonnage en faisant un parcours en largeur à partir de 1000 sommets choisis au hasard. L'hypothèse des six degrés de séparation se confirme-t-elle ? Est-ce qu'il s'agit d'un réseau petit monde ? Quelle sera la distance moyenne dans un réseau aléatoire avec les mêmes caractéristiques ? Tracez également la *distribution* des distances. Formulez une hypothèse sur la loi de cette distribution.
 
-    **DONE**
-
 - Nous obtenons une distance moyenne dans le réseau entre **6,3** et **7** (en faisant tourner 5 fois le programme).
 - L'hypothèse des 6 degrés de séparation semble donc se confirmer.
-- La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne 6.7 $`\pm`$ 6.2 -> le réseau est donc petit monde.
+- La formule $`Dmax \pm log(N)/log(<k>)`$ nous donne **6.7** $`\pm`$ 6.2 -> le réseau est donc petit monde.
 - La distance moyenne dans un réseau aléatoire de même caractéristique est **6.39** en utilisant la formule $`d_r = (log(N) - \gamma)/(log(<k>) + 1/2`$ avec $`\gamma`$ la constante d'Euler $`\pm`$ 0.57722.
 
 Pour tracer le graphique de la distribution des distances, nous allons cette fois utiliser ce code-ci, pour avoir la somme des distances en fonction de leur apparition : 
@@ -91,13 +83,15 @@ Nous obtenons ce graphique :
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
 
-    **DOING**
-
-en exécutant les tests un nombre significatif de fois ($`\pm`$15 fois), nous observons : 
-- Le degré moyen du réseau random est légèrement plus élevé en moyenne (6.995) que le degré moyen du réseau donné (6.622).
-- Le coefficient de clusturing du réseau random est en moyenne inférieure (0.581) à celui du réseau donné (0.718)
+En exécutant les tests un nombre significatif de fois ($`\pm`$**15** fois), nous observons : 
+- Le degré moyen du réseau random est légèrement plus élevé en moyenne (**6.995**) que le degré moyen du réseau donné (**6.622**).
+- Le coefficient de clusturing du réseau random est en moyenne inférieure (**0.581**) à celui du réseau donné (**0.718**)
 - Le réseau random est à chaque fois connexe tout comme le réseau donné et ont à chaque fois qu'une seule composante connexe
-- La distance moyenne dans le réseau random est inférieure (5.055) à la distance moyenne du réseau donné (6.932)
+- La distance moyenne dans le réseau random est inférieure (**5.055**) à la distance moyenne du réseau donné (**6.932**)
+
+Ces résultats sont très légèrement en dehors de ce que l'on pouvait attendre en termes de résultat.
+Cela est surement dû au fait que le réseau donné soit un réseau qui "a un sens", qui est construit pour servir une utilité et est donc façonné d'une certaine manière.
+Ici, nos réseaux aléatoires, bien qu'ils soient construits sur la méthode d'attachement préférentiel de Barabasi-Albert, qui tente de recréer les réseaux de connexion entre personnes, nous observons que cette approche, bien que ressemblante à notre réseau, n'est pas assez proche de l'original dans certains domaines (coefficient de clusturing et distance moyenne).
 
 7. (*Question bonus*) S'il y a une caractéristique du réseau de collaboration que le modèle de Barabasi-Albert n'arrive pas à reproduire c'est le coefficient de clustering. Est-ce qu'on peut espérer faire mieux avec une variante de la méthode de copie :
 
