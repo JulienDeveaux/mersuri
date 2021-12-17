@@ -91,7 +91,13 @@ Nous obtenons ce graphique :
 
 6. Utilisez les générateurs de GraphStream pour générer un réseau aléatoire et un réseau avec la méthode d'attachement préférentiel (Barabasi-Albert) qui ont la même taille et le même degré moyen. Refaites les mesures des questions précédentes pour ces deux réseaux. Les résultats expérimentaux correspondent-ils aux prédictions théoriques ? Comparez avec le réseau de collaboration. Que peut-on conclure ?
 
-    **TODO**
+    **DOING**
+
+en exécutant les tests un nombre significatif de fois ($`\pm`$15 fois), nous observons : 
+- Le degré moyen du réseau random est légèrement plus élevé en moyenne (6.995) que le degré moyen du réseau donné (6.622).
+- Le coefficient de clusturing du réseau random est en moyenne inférieure (0.581) à celui du réseau donné (0.718)
+- Le réseau random est à chaque fois connexe tout comme le réseau donné et ont à chaque fois qu'une seule composante connexe
+- La distance moyenne dans le réseau random est inférieure (5.055) à la distance moyenne du réseau donné (6.932)
 
 7. (*Question bonus*) S'il y a une caractéristique du réseau de collaboration que le modèle de Barabasi-Albert n'arrive pas à reproduire c'est le coefficient de clustering. Est-ce qu'on peut espérer faire mieux avec une variante de la méthode de copie :
 

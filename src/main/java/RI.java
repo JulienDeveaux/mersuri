@@ -1,9 +1,12 @@
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Toolkit;
+import org.graphstream.algorithm.generator.BarabasiAlbertGenerator;
+import org.graphstream.algorithm.generator.Generator;
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceEdge;
 
@@ -56,6 +59,22 @@ public class RI {
         degreMoyen /= graph.getNodeCount();
         System.out.println("Degre moyen : " + degreMoyen);
 
+        Graph randomgraph = new SingleGraph("Random graph");
+        Generator gen = new BarabasiAlbertGenerator((int)degreMoyen);
+        gen.addSink(randomgraph);
+        gen.begin();
+        for(int i = 0; i < graph.getNodeCount(); i++) {
+            gen.nextEvents();
+        }
+        gen.end();
+
+        float degreMoyenRandom = 0;
+        for(int i = 0; i < randomgraph.getNodeCount(); i++) {
+            degreMoyenRandom += randomgraph.getNode(i).getDegree();
+        }
+        degreMoyenRandom /= randomgraph.getNodeCount();
+        System.out.println("Degre moyen réseau random : " + degreMoyenRandom);
+
         float coefClusturing = 0;
         for(int i = 0; i < graph.getNodeCount(); i++) {
             Node n = graph.getNode(i);
@@ -71,12 +90,32 @@ public class RI {
         float coefClusturingAlea = degreMoyen / graph.getNodeCount();
         System.out.println("Coefficiend de clusturing dans un graph aléatoire de même degré moyen : " + coefClusturingAlea);
 
+        float coefClusturingRandom = 0;
+        for(int i = 0; i < randomgraph.getNodeCount(); i++) {
+            Node n = randomgraph.getNode(i);
+            if(n.getDegree() == 1 || n.getDegree() == 0) {
+                coefClusturingRandom += 0;
+            } else {
+                coefClusturingRandom += (2.0 * n.edges().count() / (n.getDegree() * (n.getDegree() - 1)));
+            }
+        }
+        coefClusturingRandom /= randomgraph.getNodeCount();
+        System.out.println("Coefficient de clusturing réseau random : " + coefClusturingRandom);
+
         ConnectedComponents composantesConnexes = new ConnectedComponents();
         composantesConnexes.init(graph);
         if(composantesConnexes.getConnectedComponentsCount() > 0) {
             System.out.println("Le réseau est connexe; trouvées : " + composantesConnexes.getConnectedComponentsCount());
         } else {
             System.out.println("Le réseau n'est pas connexe");
+        }
+
+        ConnectedComponents composantesConnexesRandom = new ConnectedComponents();
+        composantesConnexesRandom.init(randomgraph);
+        if(composantesConnexesRandom.getConnectedComponentsCount() > 0) {
+            System.out.println("Le réseau random est connexe; trouvées : " + composantesConnexesRandom.getConnectedComponentsCount());
+        } else {
+            System.out.println("Le réseau random n'est pas connexe");
         }
 
         if(degreMoyen > Math.log(graph.getNodeCount())) {
@@ -86,7 +125,7 @@ public class RI {
         }
 
 
-        int nbNoeudsParcours = 1;
+        int nbNoeudsParcours = 10;
         List<Integer> distanceDistribution = new ArrayList<>();
         int tailleMaxDistance = 0;
         List<Node> list = new LinkedList<>();   // Liste des nbNoeudsParcours noeuds aléatoires
@@ -117,9 +156,38 @@ public class RI {
 
         System.out.println("Dmax : " + Math.log(graph.getNodeCount())/Math.log(degreMoyen));
 
+
+        int nbNoeudsParcoursRandom = 10;
+        int tailleMaxDistanceRandom = 0;
+        List<Node> listRandom = new LinkedList<>();   // Liste des nbNoeudsParcours noeuds aléatoires
+        for(int i = 0; i < nbNoeudsParcoursRandom+1; i++) {
+            int r = (int) (Math.random() * randomgraph.getNodeCount());
+            if(listRandom.contains(randomgraph.getNode(r))) {       // Evite les doublons
+                i--;
+            } else {
+                listRandom.add(randomgraph.getNode(r));
+            }
+        }
+        double distanceMoyenneRandom = 0;
+        for(int i = 0; i < nbNoeudsParcoursRandom+1; i++) {
+            BreadthFirstIterator breadthFirstIteratorRandom = new BreadthFirstIterator(listRandom.get(i));
+            while(breadthFirstIteratorRandom.hasNext()) {
+                breadthFirstIteratorRandom.next();
+            }
+            for(int j = 0; j < randomgraph.getNodeCount(); j++) {
+                distanceMoyenneRandom += breadthFirstIteratorRandom.getDepthOf(randomgraph.getNode(j));
+                if(breadthFirstIteratorRandom.getDepthOf(randomgraph.getNode(j)) > tailleMaxDistanceRandom) {
+                    tailleMaxDistanceRandom = breadthFirstIteratorRandom.getDepthOf(randomgraph.getNode(j));
+                }
+            }
+        }
+        distanceMoyenneRandom = distanceMoyenneRandom/(listRandom.size()*randomgraph.getNodeCount());
+        System.out.println("Distance moyenne dans le réseau random : " + distanceMoyenneRandom);
+
+
         float eulerConstant = (float) 0.5772156649015328606065120900824024310421;
-        double distanceMoyenneRandom = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2f;
-        System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneRandom);
+        double distanceMoyenneAlea = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2f;
+        System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneAlea);
 
 
         /*int[] barreGraphData = new int[tailleMaxDistance+1];
@@ -137,7 +205,3 @@ public class RI {
         fw.close();*/
     }
 }
-        /*Nombre de nœuds : N
-         Nombre de liens : L
-         Degré du nœud i : ki
-         probabilité qu'un noeud hasard ait un degré k : pk*/
