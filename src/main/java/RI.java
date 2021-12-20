@@ -2,6 +2,7 @@ import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.Toolkit;
 import org.graphstream.algorithm.generator.BarabasiAlbertGenerator;
 import org.graphstream.algorithm.generator.Generator;
+import org.graphstream.algorithm.generator.RandomGenerator;
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -14,10 +15,7 @@ import org.graphstream.stream.file.FileSourceEdge;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class RI {
     protected static String styleSheet =
@@ -38,9 +36,16 @@ public class RI {
                     "}";
 
     public static void main(String[] args) throws IOException {
+        System.setProperty("org.graphstream.ui", "swing");
+        Graph monGenerateur = new DefaultGraph("BarabasiAlbertVariant");
+        monGenerateur.setAttribute("ui.stylesheet", styleSheet);
+        monGenerateur.display();
+        barabasiAlbertVariantGenerator(monGenerateur, 1000, 0.5f);
+
+
+
         Graph graph = new DefaultGraph("graph");
         graph.setAttribute("ui.stylesheet", styleSheet);
-        System.setProperty("org.graphstream.ui", "swing");
         String filePath = "src/main/resources/com-dblp.ungraph.txt";
         FileSource fs = new FileSourceEdge();
         fs.addSink(graph);
@@ -203,5 +208,43 @@ public class RI {
         }
         fw.write(txt);
         fw.close();*/
+    }
+
+    static Graph barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
+        int itNode = 0;
+        int itEdge = 0;
+        while(itNode != nodeCount) {
+            if(graphGenere.getNodeCount() == 0) {
+                graphGenere.addNode("" + itNode);
+                itNode++;
+            } else {
+                graphGenere.addNode("" + itNode);
+                Node newNode = graphGenere.getNode(itNode);
+                itNode++;
+
+                Node randomNode = graphGenere.getNode((int) (Math.random() * itNode));
+                while (graphGenere.getNode(randomNode.getIndex()) == graphGenere.getNode(newNode.getIndex())) {
+                    randomNode = graphGenere.getNode((int) (Math.random() * itNode));
+                }
+                List<Node> voisins = new ArrayList<>();
+                for (int i = 0; i < randomNode.getDegree(); i++) {      // Recherche des voisins
+                    voisins.add(randomNode.getEdge(i).getOpposite(randomNode));
+                }
+                if (voisins.size() == 0) {       // cas ou le noeud random choisi est isolé
+                    graphGenere.addEdge(String.valueOf(itEdge), newNode, randomNode);
+                    itEdge++;
+                } else {
+                    Random r = new Random();
+                    for (int i = 0; i < voisins.size(); i++) {
+                        float num = r.nextFloat();
+                        if (num < probabilite) {         // on se connecte dessus
+                            graphGenere.addEdge(String.valueOf(itEdge), newNode, voisins.get(i));
+                            itEdge++;
+                        }
+                    }
+                }
+            }
+        }
+        return graphGenere;
     }
 }
