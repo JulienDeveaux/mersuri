@@ -1,8 +1,6 @@
 import org.graphstream.algorithm.ConnectedComponents;
-import org.graphstream.algorithm.Toolkit;
 import org.graphstream.algorithm.generator.BarabasiAlbertGenerator;
 import org.graphstream.algorithm.generator.Generator;
-import org.graphstream.algorithm.generator.RandomGenerator;
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -12,8 +10,6 @@ import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceEdge;
 
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -210,20 +206,20 @@ public class RI {
         fw.close();*/
     }
 
-    static Graph barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
+    static void barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
         int itNode = 0;
         int itEdge = 0;
         while(itNode != nodeCount) {
             if(graphGenere.getNodeCount() == 0) {
-                graphGenere.addNode("" + itNode);
+                graphGenere.addNode("" + itNode);               // Ajout du noeud initial
                 itNode++;
             } else {
-                graphGenere.addNode("" + itNode);
+                graphGenere.addNode("" + itNode);               // On ajoute un noeud qui sera relié à un autre plus tard avec la probabilité donné
                 Node newNode = graphGenere.getNode(itNode);
                 itNode++;
 
                 Node randomNode = graphGenere.getNode((int) (Math.random() * itNode));
-                while (graphGenere.getNode(randomNode.getIndex()) == graphGenere.getNode(newNode.getIndex())) {
+                while (graphGenere.getNode(randomNode.getIndex()) == graphGenere.getNode(newNode.getIndex())) {     // Vérifie que randomNode != newNode
                     randomNode = graphGenere.getNode((int) (Math.random() * itNode));
                 }
                 List<Node> voisins = new ArrayList<>();
@@ -237,7 +233,7 @@ public class RI {
                     Random r = new Random();
                     for (int i = 0; i < voisins.size(); i++) {
                         float num = r.nextFloat();
-                        if (num < probabilite) {         // on se connecte dessus
+                        if (num < probabilite) {         // on se connecte dessus si la valeur du random est inférieur à notre probabilité
                             graphGenere.addEdge(String.valueOf(itEdge), newNode, voisins.get(i));
                             itEdge++;
                         }
@@ -245,6 +241,5 @@ public class RI {
                 }
             }
         }
-        return graphGenere;
     }
 }

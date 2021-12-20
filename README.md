@@ -101,4 +101,4 @@ Ici, nos réseaux aléatoires, bien qu'ils soient construits sur la méthode d'a
 
     Essayez d'implanter un tel générateur et voir les résultats qu'il donne.
 
-    **TODO**
+    **DOING**
