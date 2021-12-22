@@ -101,4 +101,13 @@ Ici, nos réseaux aléatoires, bien qu'ils soient construits sur la méthode d'a
 
     Essayez d'implanter un tel générateur et voir les résultats qu'il donne.
 
-    **DOING**
+
+**DONE**
+ 
+Avec ce nouveau générateur, nous obtenons des résultats parfois différents, parfois ressemblants au réseau initial avec un nombre de noeud identique et un nombre de liens ressemblant (probabilité de **0.55%** de création de lien).
+- Le degré moyen est ressemblant (**6.21** pour mon générateur; **6.62** pour le réseau donné).
+- le coefficient de clusturing est plus faible avec mon générateur (**0.49**; **0.71**).
+- le réseau généré a énormément de composantes connexes (**58965; 1**).
+- la distance moyenne dans le réseau généré est négative, ce qui indique que beaucoup de noeuds sont isolés(**-0.8**; **6.43**).
+
+Nous en concluons donc que ce nouveau générateur est ressemblant, mais toujours éloigné de notre réseau initial, surtout au niveau des noeuds isolés.

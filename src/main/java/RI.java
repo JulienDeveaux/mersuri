@@ -35,11 +35,71 @@ public class RI {
         System.setProperty("org.graphstream.ui", "swing");
         Graph monGenerateur = new DefaultGraph("BarabasiAlbertVariant");
         monGenerateur.setAttribute("ui.stylesheet", styleSheet);
-        monGenerateur.display();
-        barabasiAlbertVariantGenerator(monGenerateur, 1000, 0.5f);
+        //monGenerateur.display();
+        barabasiAlbertVariantGenerator(monGenerateur, 317080, 0.55f);
+        System.out.println("Résultats de mon générateur : ");
+        System.out.println("node count : " + monGenerateur.getNodeCount() + " / edge count : " + monGenerateur.getEdgeCount());
+        float degreMoyenGenerateur = 0;
+        for(int i = 0; i < monGenerateur.getNodeCount(); i++) {
+            degreMoyenGenerateur += monGenerateur.getNode(i).getDegree();
+        }
+        degreMoyenGenerateur /= monGenerateur.getNodeCount();
+        System.out.println("Degre moyen : " + degreMoyenGenerateur);
+
+        float coefClusturingGenerateur = 0;
+        for(int i = 0; i < monGenerateur.getNodeCount(); i++) {
+            Node n = monGenerateur.getNode(i);
+            if(n.getDegree() == 1 || n.getDegree() == 0) {
+                coefClusturingGenerateur += 0;
+            } else {
+                coefClusturingGenerateur += (2.0 * n.edges().count() / (n.getDegree() * (n.getDegree() - 1)));
+            }
+        }
+        coefClusturingGenerateur /= monGenerateur.getNodeCount();
+        System.out.println("Coefficient de clusturing : " + coefClusturingGenerateur);
+
+        ConnectedComponents composantesConnexesGenerateur = new ConnectedComponents();
+        composantesConnexesGenerateur.init(monGenerateur);
+        if(composantesConnexesGenerateur.getConnectedComponentsCount() > 0) {
+            System.out.println("Le réseau généré est connexe; trouvées : " + composantesConnexesGenerateur.getConnectedComponentsCount());
+        } else {
+            System.out.println("Le réseau généré n'est pas connexe");
+        }
+
+        int nbNoeudsParcoursGenerateur = 10;
+        int tailleMaxDistanceGenere = 0;
+        List<Node> listGenere = new LinkedList<>();   // Liste des nbNoeudsParcours noeuds aléatoires
+        for(int i = 0; i < nbNoeudsParcoursGenerateur+1; i++) {
+            int r = (int) (Math.random() * monGenerateur.getNodeCount());
+            if(listGenere.contains(monGenerateur.getNode(r))) {       // Evite les doublons
+                i--;
+            } else {
+                listGenere.add(monGenerateur.getNode(r));
+            }
+        }
+        double distanceMoyenneGenere = 0;
+        for(int i = 0; i < nbNoeudsParcoursGenerateur+1; i++) {
+            BreadthFirstIterator breadthFirstIteratorGenere = new BreadthFirstIterator(listGenere.get(i));
+            while(breadthFirstIteratorGenere.hasNext()) {
+                breadthFirstIteratorGenere.next();
+            }
+            for(int j = 0; j < monGenerateur.getNodeCount(); j++) {
+                distanceMoyenneGenere += breadthFirstIteratorGenere.getDepthOf(monGenerateur.getNode(j));
+                if(breadthFirstIteratorGenere.getDepthOf(monGenerateur.getNode(j)) > tailleMaxDistanceGenere) {
+                    tailleMaxDistanceGenere = breadthFirstIteratorGenere.getDepthOf(monGenerateur.getNode(j));
+                }
+            }
+        }
+        distanceMoyenneGenere = distanceMoyenneGenere/(listGenere.size()*monGenerateur.getNodeCount());
+        System.out.println("Distance moyenne dans le réseau généré : " + distanceMoyenneGenere);
+
+        System.out.println("Dmax généré : " + Math.log(monGenerateur.getNodeCount())/Math.log(degreMoyenGenerateur));
 
 
 
+
+
+        System.out.println("\nTests sur le réseau donné et sur la variante random : ");
         Graph graph = new DefaultGraph("graph");
         graph.setAttribute("ui.stylesheet", styleSheet);
         String filePath = "src/main/resources/com-dblp.ungraph.txt";
