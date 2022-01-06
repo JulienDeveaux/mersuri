@@ -285,7 +285,7 @@ public class RI {
         /* Simulations */
 
         /* --- On ne fait rien --- */
-        int nbPasse = 5;
+        int nbPasse = 0;
         int[][] resultats = new int[nbPasse][90];
         for(int f = 0; f < nbPasse; f++) {
             graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
@@ -354,6 +354,78 @@ public class RI {
 
         /* --- On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire) --- */
 
+        int nbPasse2 = 5;
+        int[][] resultats2 = new int[nbPasse2][90];
+        for(int f = 0; f < nbPasse2; f++) {
+            graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
+            graph.getNode(0).setAttribute("flush", (int)(Math.random()*14));
+            graph.getNode(0).setAttribute("j", 0);
+            graph.getNode(0).setAttribute("immu", false);
+            for(int j = 0; j < graph.getNode(0).getDegree(); j++) {
+                graph.getNode(0).setAttribute("mail"+j, (int)(Math.random()*7));
+            }
+            for(int i = 1; i < graph.getNodeCount(); i++) {
+                Node n = graph.getNode(i);
+                n.setAttribute("I", false);
+                n.setAttribute("flush", (int)(Math.random()*14));   //Mise a jour pas en même temps pour tous le monde
+                n.setAttribute("j", -1);                     //A été infecté quel jour
+                for(int j = 0; j < graph.getNode(i).getDegree(); j++) {
+                    n.setAttribute("mail"+j, (int)(Math.random()*7));
+                }
+                if(Math.random()>0.5) {
+                    n.setAttribute("immu", true);
+                } else {
+                    n.setAttribute("immu", false);
+                }
+            }
+            int nbContamines = 1;
+
+            System.out.println("PASSE " + f);
+            for (int i = 0; i < 90; i++) {
+                for (int j = 0; j < graph.getNodeCount(); j++) {
+                    Node n = graph.getNode(j);
+
+                    if (n.getAttribute("flush").equals(0)) {             // Si c'est le jour de l'antivirus
+                        if (n.getAttribute("I").equals(true) && !n.getAttribute("j").equals(i)) {
+                            n.setAttribute("I", false);
+                            nbContamines--;
+                        }
+                        n.setAttribute("flush", (int) (Math.random() * 14));
+                    } else {
+                        n.setAttribute("flush", (int) n.getAttribute("flush") - 1);
+                        List<Node> voisins = new ArrayList<>();
+                        for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
+                            voisins.add(n.getEdge(h).getOpposite(n));
+                        }
+                        for (int h = 0; h < voisins.size(); h++) {
+                            if (n.getAttribute("mail" + h).equals(0)) {
+                                n.setAttribute("mail" + h, (int) (Math.random() * 7));
+                                if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i) && voisins.get(h).getAttribute("immu").equals(false)) {
+                                    voisins.get(h).setAttribute("I", true);
+                                    voisins.get(h).setAttribute("j", i);
+                                    nbContamines++;
+                                }
+                            } else {
+                                n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
+                            }
+                        }
+                    }
+                }
+                resultats2[f][i] = nbContamines;
+                System.out.println("NbContaminés jour " + i + " : " + nbContamines);
+            }
+            System.out.println("Pourcentage contaminé : " + (1.0*nbContamines/graph.getNodeCount())*100);
+            nbContamines = 1;
+        }
+        System.out.println("Résumé en moyenne : ");
+        for(int i = 0; i < 90 && nbPasse2 > 0; i++) {
+            int moy = 0;
+            for(int j = 0; j < nbPasse2; j++) {
+                moy += resultats2[j][i];
+            }
+            moy/=nbPasse2;
+            System.out.println((i+1) + " " + moy);
+        }
         /* --- On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective) --- */
 
         /* Fin simulations */
