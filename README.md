@@ -121,12 +121,16 @@ Un individu envoie en moyenne un mail par semaine à chacun de ses collaborateur
 Un individu met à jour son anti-virus en moyenne deux fois par mois. Cela nettoie son système mais ne le protège pas de nouvelles infections car le virus mute.
 L'épidémie commence avec un individu infecté (patient zéro).
 
+L'échelle de temps utilisé sera le jour.
+
 1. Quel est le taux de propagation du virus ? Quel est le seuil épidémique du réseau ? Comparez avec le seuil théorique d'un réseau aléatoire du même degré moyen.
+-Le taux de propagation du virus est de 2 ($`\beta = 1/7 et Mu \pm 1/14, donc \gamma = 1/7/1/14 = 2`$)
+-Le seuil épidémique du réseau est de 0.045, qui est strictement inférieur à 2($`\gamma <sub>c</sub> = <k>/<k²> \pm 6.6/144 = 0.045 << 2`$). L'épidémie va donc se propager rapidement
+-Le seuil théorique d'un réseau aléatoire de même degré ($`\gamma = 1/(<k>+1) \pm 0.131`$)
 
+**DONE**
 
-   **TODO**
-
-2. Simulez la propagation du virus jour par jour pendant trois mois avec les scénarios suivants :
+3. Simulez la propagation du virus jour par jour pendant trois mois avec les scénarios suivants :
    - On ne fait rien pour empêcher l'épidémie
    - On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire)
    - On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).

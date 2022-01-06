@@ -33,7 +33,7 @@ public class RI {
 
     public static void main(String[] args) throws IOException {
         System.setProperty("org.graphstream.ui", "swing");
-        Graph monGenerateur = new DefaultGraph("BarabasiAlbertVariant");
+        /*Graph monGenerateur = new DefaultGraph("BarabasiAlbertVariant");
         monGenerateur.setAttribute("ui.stylesheet", styleSheet);
         //monGenerateur.display();
         barabasiAlbertVariantGenerator(monGenerateur, 317080, 0.55f);
@@ -93,13 +93,13 @@ public class RI {
         distanceMoyenneGenere = distanceMoyenneGenere/(listGenere.size()*monGenerateur.getNodeCount());
         System.out.println("Distance moyenne dans le réseau généré : " + distanceMoyenneGenere);
 
-        System.out.println("Dmax généré : " + Math.log(monGenerateur.getNodeCount())/Math.log(degreMoyenGenerateur));
+        System.out.println("Dmax généré : " + Math.log(monGenerateur.getNodeCount())/Math.log(degreMoyenGenerateur));*/
 
 
 
 
 
-        System.out.println("\nTests sur le réseau donné et sur la variante random : ");
+        //System.out.println("\nTests sur le réseau donné et sur la variante random : ");
         Graph graph = new DefaultGraph("graph");
         graph.setAttribute("ui.stylesheet", styleSheet);
         String filePath = "src/main/resources/com-dblp.ungraph.txt";
@@ -120,7 +120,7 @@ public class RI {
         degreMoyen /= graph.getNodeCount();
         System.out.println("Degre moyen : " + degreMoyen);
 
-        Graph randomgraph = new SingleGraph("Random graph");
+        /*Graph randomgraph = new SingleGraph("Random graph");
         Generator gen = new BarabasiAlbertGenerator((int)degreMoyen);
         gen.addSink(randomgraph);
         gen.begin();
@@ -248,7 +248,7 @@ public class RI {
 
         float eulerConstant = (float) 0.5772156649015328606065120900824024310421;
         double distanceMoyenneAlea = ((Math.log(graph.getNodeCount()) - eulerConstant) / Math.log(degreMoyen)) + 1/2f;
-        System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneAlea);
+        System.out.println("Distance moyenne dans le réseau aléatoire de même taille : " + distanceMoyenneAlea);*/
 
 
         /*int[] barreGraphData = new int[tailleMaxDistance+1];
@@ -264,6 +264,24 @@ public class RI {
         }
         fw.write(txt);
         fw.close();*/
+
+
+
+        /* Partie propagation */
+        float degreMoyenCarre = 0;
+        for(int i = 0; i < graph.getNodeCount(); i++) {
+            degreMoyenCarre += graph.getNode(i).getDegree() * graph.getNode(i).getDegree();
+        }
+        degreMoyenCarre /= graph.getNodeCount();
+        System.out.println("moyenne des degrés <k²> : " + degreMoyenCarre);
+        System.out.println("Seuil épidémique lambdaC = <k>/<k²> : " + degreMoyen / degreMoyenCarre);
+        if(degreMoyen / degreMoyenCarre > (1/7/1/14)) {
+            System.out.println("La maladie persistera");
+        } else {
+            System.out.println("La maladie disparaitra");
+        }
+        System.out.println("Le seuil épidémique pour un réseau aléatoire de même  degré est de : " + (1/(degreMoyen+1)));
+
     }
 
     static void barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
@@ -303,3 +321,15 @@ public class RI {
         }
     }
 }
+
+
+
+/*
+taux de propagation du virus sis :
+betha = 1/7
+Mu = 1/14
+lambda = 1/7/1/14 = 2
+
+seuil épidémique du réseau :
+lambda de c = <k>/<k²> = 6.6/
+*/
