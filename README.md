@@ -111,3 +111,45 @@ Avec ce nouveau générateur, nous obtenons des résultats parfois différents, 
 - la distance moyenne dans le réseau généré est négative, ce qui indique que beaucoup de noeuds sont isolés(**-0.8**; **6.43**).
 
 Nous en concluons donc que ce nouveau générateur est ressemblant, mais toujours éloigné de notre réseau initial, surtout au niveau des noeuds isolés.
+
+##Proppagation d'un virus
+Les consignes sont les mêmes que pour le premier TP. On travaille sur les mêmes données et la problématique est proche. Utilisez donc le même dépôt sur la forge.
+
+Nos collaborateurs scientifiques communiquent souvent par mail. Malheureusement pour eux, les pièces jointes de ces mails contiennent parfois des virus informatiques. On va étudier la propagation d'un virus avec les hypothèses suivantes :
+
+Un individu envoie en moyenne un mail par semaine à chacun de ses collaborateurs.
+Un individu met à jour son anti-virus en moyenne deux fois par mois. Cela nettoie son système mais ne le protège pas de nouvelles infections car le virus mute.
+L'épidémie commence avec un individu infecté (patient zéro).
+
+1. Quel est le taux de propagation du virus ? Quel est le seuil épidémique du réseau ? Comparez avec le seuil théorique d'un réseau aléatoire du même degré moyen.
+
+
+   **TODO**
+
+2. Simulez la propagation du virus jour par jour pendant trois mois avec les scénarios suivants :
+   - On ne fait rien pour empêcher l'épidémie
+   - On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire)
+   - On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).
+   - Pour chacun des trois scénarios, tracez l'évolution de la fraction d'infectés de la population non immunisée. Que peut-on conclure ?
+
+   Attention : La réalisation d'un scénario autour des valeurs critiques est sensible aux conditions initiales. Simulez plusieurs fois chaque scénario afin d'identifier le déroulement typique.
+
+
+   **TODO**
+
+
+3. Pour justifier l'efficacité de l'immunisation sélective, calculez le degré moyen des groupes 0 et 1. Comment expliquez-vous la différence ?  
+
+
+**TODO**
+
+
+4. Du point de vue du virus l'immunisation d'un nœud est équivalente à sa suppression du réseau. Calculez le seuil épidémique du réseau modifié pour chacune des deux stratégies d'immunisation et comparez avec le seuil épidémique du réseau initial.  
+
+
+**TODO**
+
+5. Simulez l'épidémie avec les mêmes hypothèses et les mêmes scénarios dans un réseau aléatoire et un réseau généré avec la méthode d'attachement préférentiel de la même taille et le même degré moyen. Comparez et commentez les résultats.  
+
+
+**TODO**
