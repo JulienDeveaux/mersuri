@@ -131,7 +131,7 @@ L'échelle de temps utilisé sera le jour.
 **DONE**
 
 2. Simulez la propagation du virus jour par jour pendant trois mois avec les scénarios suivants :
-   - On ne fait rien pour empêcher l'épidémie  (utiliser une échelle i=T/N en vertical et t en horizontal pour le draw)
+   - On ne fait rien pour empêcher l'épidémie
    - On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire)
    - On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective).
    - Pour chacun des trois scénarios, tracez l'évolution de la fraction d'infectés de la population non immunisée. Que peut-on conclure ?
@@ -139,13 +139,18 @@ L'échelle de temps utilisé sera le jour.
    Attention : La réalisation d'un scénario autour des valeurs critiques est sensible aux conditions initiales. Simulez plusieurs fois chaque scénario afin d'identifier le déroulement typique.
 
 
-   **DOING**
+   **DONE**
 
 
 3. Pour justifier l'efficacité de l'immunisation sélective, calculez le degré moyen des groupes 0 et 1. Comment expliquez-vous la différence ?  
 
+Moyenne Gr0 : 4.48
 
-**TODO**
+Moyenne Gr1 : 7.7
+
+La différence entre ces groupes est que le groupe 1 immunisé ayant un plus grand nombre de voisins, permets de ralentir plus efficacement le virus, en immunisant les noeuds à plus fort degré
+
+**DONE**
 
 
 4. Du point de vue du virus l'immunisation d'un nœud est équivalente à sa suppression du réseau. Calculez le seuil épidémique du réseau modifié pour chacune des deux stratégies d'immunisation et comparez avec le seuil épidémique du réseau initial.  
