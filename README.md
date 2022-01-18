@@ -124,9 +124,9 @@ L'épidémie commence avec un individu infecté (patient zéro).
 L'échelle de temps utilisé sera le jour.
 
 1. Quel est le taux de propagation du virus ? Quel est le seuil épidémique du réseau ? Comparez avec le seuil théorique d'un réseau aléatoire du même degré moyen.
--Le taux de propagation du virus est de 2 ($`\beta = 1/7 et Mu \pm 1/14, donc \gamma = 1/7/1/14 = 2`$)
--Le seuil épidémique du réseau est de 0.045, qui est strictement inférieur à 2($`\gamma <sub>c</sub> = <k>/<k²> \pm 6.6/144 = 0.045 << 2`$). L'épidémie va donc se propager rapidement
--Le seuil théorique d'un réseau aléatoire de même degré ($`\gamma = 1/(<k>+1) \pm 0.131`$)
+- Le taux de propagation du virus est de 2 ($`\beta = 1/7 et Mu \pm 1/14, donc \gamma = 1/7/1/14 = 2`$)
+- Le seuil épidémique du réseau est de 0.045, qui est strictement inférieur à 2($`\gamma <sub>c</sub> = <k>/<k²> \pm 6.6/144 = 0.045 << 2`$). L'épidémie va donc se propager rapidement
+- Le seuil théorique d'un réseau aléatoire de même degré ($`\gamma = 1/(<k>+1) \pm 0.131`$)
 
 **DONE**
 
@@ -148,15 +148,20 @@ Moyenne Gr0 : 4.48
 
 Moyenne Gr1 : 7.7
 
-La différence entre ces groupes est que le groupe 1 immunisé ayant un plus grand nombre de voisins, permets de ralentir plus efficacement le virus, en immunisant les noeuds à plus fort degré
+La différence entre ces groupes est que le groupe 1 immunisé ayant un plus grand nombre de voisins, permets de ralentir plus efficacement le virus, en immunisant les noeuds à plus fort degré.
 
 **DONE**
 
 
 4. Du point de vue du virus l'immunisation d'un nœud est équivalente à sa suppression du réseau. Calculez le seuil épidémique du réseau modifié pour chacune des deux stratégies d'immunisation et comparez avec le seuil épidémique du réseau initial.  
 
+Ici, pour le premier scénario, $`<k> = 82203`$ et $`<k²> = 6757333209`$. Pour le second scénario, $`<k> = 163158`$ et $`<k²> = 26620532964`$.
+- Le seuil épidémique du réseau lors de la première stratégie est de **1.21e<sup>-5</sup>** qui est inférieur à 2, le taux de propagation du virus. L'épidémie va donc se propager.
+- Le seuil épidémique du réseau lors de la deuxième stratégie est de **6.12e<sup>-6</sup>** qui est inférieur à 2, l'épidémie va donc se propager.
 
-**TODO**
+Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que celui du scénario 2, il y aura donc théoriquement plus de cas dans le scénario 3, ce qui est le cas.
+
+**DONE**
 
 5. Simulez l'épidémie avec les mêmes hypothèses et les mêmes scénarios dans un réseau aléatoire et un réseau généré avec la méthode d'attachement préférentiel de la même taille et le même degré moyen. Comparez et commentez les résultats.  
 
