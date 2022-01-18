@@ -1,6 +1,7 @@
 import org.graphstream.algorithm.ConnectedComponents;
 import org.graphstream.algorithm.generator.BarabasiAlbertGenerator;
 import org.graphstream.algorithm.generator.Generator;
+import org.graphstream.algorithm.generator.RandomGenerator;
 import org.graphstream.graph.BreadthFirstIterator;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -283,9 +284,85 @@ public class RI {
         System.out.println("Le seuil épidémique pour un réseau aléatoire de même  degré est de : " + (1/(degreMoyen+1)));
 
         /* Simulations */
+        scenario1(graph, 0);
 
+        scenario2(graph, 0);
+
+        scenario3(graph, 0);
+        /* Fin simulations */
+        System.out.println("Génération barabasi");      //Long à générer
+        Graph randomgraph = new SingleGraph("Random graph");
+        Generator gen = new BarabasiAlbertGenerator((int)degreMoyen);
+        gen.addSink(randomgraph);
+        gen.begin();
+        int count = graph.getNodeCount();
+        for(int i = 0; i < count; i++) {
+            gen.nextEvents();
+            System.out.println("i : " + i);
+            System.out.println("Count : " + count);
+        }
+        gen.end();
+
+        System.out.println("Génération aléa");
+        Graph graphAlea = new SingleGraph("RandomGraph");
+        gen = new RandomGenerator(degreMoyen);
+        gen.addSink(graphAlea);
+        gen.begin();
+        for (int i = 0; i < graph.getNodeCount(); i++) {
+            gen.nextEvents();
+        }
+        gen.end();
+
+        System.out.println("Scénarios pour le graph généré avec le BarabasiAlbertGenerator : ");
+        scenario1(randomgraph,1);
+        scenario2(randomgraph,1);
+        scenario3(randomgraph,1);
+
+        System.out.println("Scénarios pour le graph aléatoire : ");
+        scenario1(graphAlea,1);
+        scenario2(graphAlea,1);
+        scenario3(graphAlea,1);
+    }
+
+    static void barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
+        int itNode = 0;
+        int itEdge = 0;
+        while(itNode != nodeCount) {
+            if(graphGenere.getNodeCount() == 0) {
+                graphGenere.addNode("" + itNode);               // Ajout du noeud initial
+                itNode++;
+            } else {
+                graphGenere.addNode("" + itNode);               // On ajoute un noeud qui sera relié à un autre plus tard avec la probabilité donné
+                Node newNode = graphGenere.getNode(itNode);
+                itNode++;
+
+                Node randomNode = graphGenere.getNode((int) (Math.random() * itNode));
+                while (graphGenere.getNode(randomNode.getIndex()) == graphGenere.getNode(newNode.getIndex())) {     // Vérifie que randomNode != newNode
+                    randomNode = graphGenere.getNode((int) (Math.random() * itNode));
+                }
+                List<Node> voisins = new ArrayList<>();
+                for (int i = 0; i < randomNode.getDegree(); i++) {      // Recherche des voisins
+                    voisins.add(randomNode.getEdge(i).getOpposite(randomNode));
+                }
+                if (voisins.size() == 0) {       // cas ou le noeud random choisi est isolé
+                    graphGenere.addEdge(String.valueOf(itEdge), newNode, randomNode);
+                    itEdge++;
+                } else {
+                    Random r = new Random();
+                    for (int i = 0; i < voisins.size(); i++) {
+                        float num = r.nextFloat();
+                        if (num < probabilite) {         // on se connecte dessus si la valeur du random est inférieur à notre probabilité
+                            graphGenere.addEdge(String.valueOf(itEdge), newNode, voisins.get(i));
+                            itEdge++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    static void scenario1 (Graph graph, int nbPasse) {
         /* --- On ne fait rien --- */
-        int nbPasse = 0;
         int[][] resultats = new int[nbPasse][90];
         for(int f = 0; f < nbPasse; f++) {
             graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
@@ -366,12 +443,12 @@ public class RI {
             moy/=nbPasse;
             System.out.println((i+1) + " " + moy);
         }
+    }
 
+    static void scenario2 (Graph graph, int nbPasse) {
         /* --- On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire) --- */
-
-        int nbPasse2 = 0;
-        int[][] resultats2 = new int[nbPasse2][90];
-        for(int f = 0; f < nbPasse2; f++) {
+        int[][] resultats = new int[nbPasse][90];
+        for(int f = 0; f < nbPasse; f++) {
             graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
             graph.getNode(0).setAttribute("flush", (int)(Math.random()*14));
             graph.getNode(0).setAttribute("j", 0);
@@ -442,30 +519,30 @@ public class RI {
                         }
                     }
                 }
-                resultats2[f][i] = nbContamines;
+                resultats[f][i] = nbContamines;
                 System.out.println("NbContaminés jour " + i + " : " + nbContamines);
             }
             System.out.println("Pourcentage contaminé : " + (1.0*nbContamines/graph.getNodeCount())*100);
         }
         System.out.println("Résumé en moyenne : ");
-        for(int i = 0; i < 90 && nbPasse2 > 0; i++) {
+        for(int i = 0; i < 90 && nbPasse > 0; i++) {
             int moy = 0;
-            for(int j = 0; j < nbPasse2; j++) {
-                moy += resultats2[j][i];
+            for(int j = 0; j < nbPasse; j++) {
+                moy += resultats[j][i];
             }
-            moy/=nbPasse2;
+            moy/=nbPasse;
             System.out.println((i+1) + " " + moy);
         }
+    }
 
+    static void scenario3 (Graph graph, int nbPasse) {
         /* --- On réussit à convaincre 50 % des individus de convaincre un de leurs contacts de mettre à jour en permanence son anti-virus (immunisation sélective) --- */
-
-        int nbPasse3 = 1;
         int nbVaccine = 0;
         float degreMoyenSc3G0 = 0;
         float degreMoyenSc3G1 = 0;
         int nbVaccineTemp = 0;
-        int[][] resultats3 = new int[nbPasse3][90];
-        for(int f = 0; f < nbPasse3; f++) {
+        int[][] resultats = new int[nbPasse][90];
+        for(int f = 0; f < nbPasse; f++) {
             graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
             graph.getNode(0).setAttribute("flush", (int)(Math.random()*14));
             graph.getNode(0).setAttribute("j", 0);
@@ -582,7 +659,7 @@ public class RI {
                         }
                     }
                 }
-                resultats3[f][i] = nbContamines;
+                resultats[f][i] = nbContamines;
                 System.out.println("NbContaminés jour " + i + " : " + nbContamines);
                 System.out.println("nbVaccine jour " + i + " : " + nbVaccine);
                 if (i == 0) {
@@ -599,52 +676,13 @@ public class RI {
             System.out.println("Pourcentage immunisé : " + (1.0*nbVaccine/graph.getNodeCount())*100);
         }
         System.out.println("Résumé en moyenne : ");
-        for(int i = 0; i < 90 && nbPasse3 > 0; i++) {
+        for(int i = 0; i < 90 && nbPasse > 0; i++) {
             int moy = 0;
-            for(int j = 0; j < nbPasse3; j++) {
-                moy += resultats3[j][i];
+            for(int j = 0; j < nbPasse; j++) {
+                moy += resultats[j][i];
             }
-            moy/=nbPasse3;
+            moy/=nbPasse;
             System.out.println((i+1) + " " + moy);
-        }
-
-        /* Fin simulations */
-    }
-
-    static void barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
-        int itNode = 0;
-        int itEdge = 0;
-        while(itNode != nodeCount) {
-            if(graphGenere.getNodeCount() == 0) {
-                graphGenere.addNode("" + itNode);               // Ajout du noeud initial
-                itNode++;
-            } else {
-                graphGenere.addNode("" + itNode);               // On ajoute un noeud qui sera relié à un autre plus tard avec la probabilité donné
-                Node newNode = graphGenere.getNode(itNode);
-                itNode++;
-
-                Node randomNode = graphGenere.getNode((int) (Math.random() * itNode));
-                while (graphGenere.getNode(randomNode.getIndex()) == graphGenere.getNode(newNode.getIndex())) {     // Vérifie que randomNode != newNode
-                    randomNode = graphGenere.getNode((int) (Math.random() * itNode));
-                }
-                List<Node> voisins = new ArrayList<>();
-                for (int i = 0; i < randomNode.getDegree(); i++) {      // Recherche des voisins
-                    voisins.add(randomNode.getEdge(i).getOpposite(randomNode));
-                }
-                if (voisins.size() == 0) {       // cas ou le noeud random choisi est isolé
-                    graphGenere.addEdge(String.valueOf(itEdge), newNode, randomNode);
-                    itEdge++;
-                } else {
-                    Random r = new Random();
-                    for (int i = 0; i < voisins.size(); i++) {
-                        float num = r.nextFloat();
-                        if (num < probabilite) {         // on se connecte dessus si la valeur du random est inférieur à notre probabilité
-                            graphGenere.addEdge(String.valueOf(itEdge), newNode, voisins.get(i));
-                            itEdge++;
-                        }
-                    }
-                }
-            }
         }
     }
 }
