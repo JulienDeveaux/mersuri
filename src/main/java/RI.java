@@ -478,18 +478,18 @@ public class RI {
                 n.setAttribute("I", false);
                 n.setAttribute("flush", (int)(Math.random()*14));   //Mise a jour pas en même temps pour tous le monde
                 n.setAttribute("j", -1);                     //A été infecté quel jour
-                boolean voisinVacciné = false;
-                if(Math.random() > 0.5) {           // 50% des gens ne convaincs pas leur voisins
-                    voisinVacciné = true;
+                boolean voisinVaccine = false;
+                if(Math.random() < 0.5) {           // 50% des gens ne convaincs pas leur voisins
+                    voisinVaccine = true;
                 }
-                for(int j = 0; j < graph.getNode(i).getDegree(); j++) {
-                    n.setAttribute("mail"+j, (int)(Math.random()*7));
+                for (int j = 0; j < n.getDegree(); j++) {
+                    n.setAttribute("mail" + j, (int) (Math.random() * 7));
 
-                    if((j == graph.getNode(i).getDegree()-1 && !voisinVacciné) || (!voisinVacciné && Math.random() > 0.5)) {
+                    if ((j == n.getDegree() - 1 && !voisinVaccine) || (!voisinVaccine && Math.random() > 0.5 && n.getEdge(j).getOpposite(n) != graph.getNode(0))) {
                         n.setAttribute("immu", true);                               // On est immunisé nous même
                         n.getEdge(j).getOpposite(n).setAttribute("immu", true);     // Et le voisin aussi
                         degreMoyenSc3G0 += n.getDegree();
-                        voisinVacciné = true;
+                        voisinVaccine = true;
                         nbVaccine++;
                     } else {
                         n.getEdge(j).getOpposite(n).setAttribute("immu", false);
@@ -502,71 +502,81 @@ public class RI {
             for (int i = 0; i < 90; i++) {
                 for (int j = 0; j < graph.getNodeCount(); j++) {
                     Node n = graph.getNode(j);
+                    if (n.getAttribute("immu").equals(true)) {             // Si on est immunisé ça ne sert à rien d'être simulé on infecte personne et on est pas infecté
 
-                    if (n.getAttribute("flush").equals(0)) {             // Si c'est le jour de l'antivirus
-                        List<Node> voisins = new ArrayList<>();
-                        for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
-                            voisins.add(n.getEdge(h).getOpposite(n));
-                        }
-                        for (int h = 0; h < voisins.size(); h++) {
-                            if (n.getAttribute("mail" + h).equals(0)) {
-                                n.setAttribute("mail" + h, (int) (Math.random() * 7));
-                                if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i)) {
-                                    voisins.get(h).setAttribute("I", true);
-                                    voisins.get(h).setAttribute("j", i);
-                                    nbContamines++;
-                                }
-                            } else {
-                                n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
+                        if (n.getAttribute("flush").equals(0)) {            // Si c'est le jour de l'antivirus
+                            List<Node> voisins = new ArrayList<>();
+                            for (int h = 0; h < n.getDegree(); h++) {           // Recherche des voisins
+                                voisins.add(n.getEdge(h).getOpposite(n));
                             }
-                        }
-                        if (n.getAttribute("I").equals(true) && !n.getAttribute("j").equals(i)) {
-                            n.setAttribute("I", false);
-                            nbContamines--;
-                        }
-                        n.setAttribute("flush", (int) (Math.random() * 14));
-                    } else {
-                        n.setAttribute("flush", (int) n.getAttribute("flush") - 1);
-                        List<Node> voisins = new ArrayList<>();
-                        for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
-                            voisins.add(n.getEdge(h).getOpposite(n));
-                        }
-                        for (int h = 0; h < voisins.size(); h++) {
-                            if (n.getAttribute("mail" + h).equals(0)) {
-                                n.setAttribute("mail" + h, (int) (Math.random() * 7));
-                                if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i) && voisins.get(h).getAttribute("immu").equals(false)) {
-                                    voisins.get(h).setAttribute("I", true);
-                                    voisins.get(h).setAttribute("j", i);
-                                    nbContamines++;
+                            for (int h = 0; h < voisins.size(); h++) {
+                                if (n.getAttribute("mail" + h).equals(0)) {
+                                    n.setAttribute("mail" + h, (int) (Math.random() * 7));
+                                    if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i)) {
+                                        voisins.get(h).setAttribute("I", true);
+                                        voisins.get(h).setAttribute("j", i);
+                                        nbContamines++;
+                                    }
+                                } else {
+                                    n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
                                 }
-                            } else {
-                                n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
+                            }
+                            if (n.getAttribute("I").equals(true) && !n.getAttribute("j").equals(i)) {
+                                n.setAttribute("I", false);
+                                nbContamines--;
+                            }
+                            n.setAttribute("flush", (int) (Math.random() * 14));
+                        } else {
+                            n.setAttribute("flush", (int) n.getAttribute("flush") - 1);
+                            List<Node> voisins = new ArrayList<>();
+                            for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
+                                voisins.add(n.getEdge(h).getOpposite(n));
+                            }
+                            for (int h = 0; h < voisins.size(); h++) {
+                                if (n.getAttribute("mail" + h).equals(0)) {
+                                    n.setAttribute("mail" + h, (int) (Math.random() * 7));
+                                    if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i) && voisins.get(h).getAttribute("immu").equals(false)) {
+                                        voisins.get(h).setAttribute("I", true);
+                                        voisins.get(h).setAttribute("j", i);
+                                        nbContamines++;
+                                    }
+                                } else {
+                                    n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
+                                }
                             }
                         }
                     }
                 }
-                for(int h = 0; h < graph.getNodeCount(); h++) {
+                for (int h = 0; h < graph.getNodeCount(); h++) {        // Propagation immunité à un voisin
                     Node n = graph.getNode(h);
-                    if(!n.getAttribute("immu").equals(true) && Math.random() > 0.5) {
-                        boolean voisinVacciné = false;
+                    if (n.getAttribute("immu").equals(false) && Math.random() > 0.5) {
+                        boolean voisinVaccine = false;
                         Node lastNonVaccine = null;
-                        for(int j = 0; j < graph.getNode(h).getDegree(); j++) {
-                            if(!voisinVacciné && Math.random() > 0.5 && !n.getEdge(j).getOpposite(n).getAttribute("immu").equals(true)) {
+                        for (int j = 0; j < n.getDegree(); j++) {
+                            if (!voisinVaccine && Math.random() > 0.5 && !n.getEdge(j).getOpposite(n).getAttribute("immu").equals(true)) {
                                 n.getEdge(j).getOpposite(n).setAttribute("immu", true);
-                                voisinVacciné = true;
+                                if(n.getEdge(j).getOpposite(n).getAttribute("I").equals(true) && nbContamines != 1) {       // && nbContamines != 1 pour ne pas tuer l'épidémie
+                                    n.getEdge(j).getOpposite(n).setAttribute("I", false);
+                                    nbContamines--;
+                                }
+                                voisinVaccine = true;
                                 nbVaccine++;
-                                if(i == 1) {
+                                if (i == 1) {
                                     degreMoyenSc3G1 += n.getEdge(j).getOpposite(n).getDegree();
                                 }
-                            } else if(!n.getEdge(j).getOpposite(n).getAttribute("immu").equals(true)) {
+                            } else if (!n.getEdge(j).getOpposite(n).getAttribute("immu").equals(true) && nbContamines != 1) {
                                 lastNonVaccine = n.getEdge(j).getOpposite(n);
                             }
                         }
-                        if(!voisinVacciné && lastNonVaccine != null) {
+                        if (!voisinVaccine && lastNonVaccine != null) {
                             lastNonVaccine.setAttribute("immu", true);
+                            if(lastNonVaccine.getAttribute("I").equals(true)) {
+                                lastNonVaccine.setAttribute("I", false);
+                                nbContamines--;
+                            }
                             nbVaccine++;
-                            voisinVacciné = true;
-                            if(i == 1) {
+                            voisinVaccine = true;
+                            if (i == 1) {
                                 degreMoyenSc3G1 += lastNonVaccine.getDegree();
                             }
                         }
@@ -575,10 +585,10 @@ public class RI {
                 resultats3[f][i] = nbContamines;
                 System.out.println("NbContaminés jour " + i + " : " + nbContamines);
                 System.out.println("nbVaccine jour " + i + " : " + nbVaccine);
-                if(i == 0) {
+                if (i == 0) {
                     degreMoyenSc3G0 /= nbVaccine;
                     nbVaccineTemp = nbVaccine;
-                } else if(i == 1) {
+                } else if (i == 1) {
                     int nb = nbVaccine - nbVaccineTemp;
                     degreMoyenSc3G1 /= nb;
                 }
