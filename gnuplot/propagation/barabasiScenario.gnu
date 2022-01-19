@@ -4,6 +4,7 @@ set xlabel 'time'
 set ylabel 'infectés'
 set output 'barabasiScenario.png'
 set key outside
+set yrange [0:300000]
 
 plot 'barabasiScenarios.dat' index 0 using 1:2 smooth csplines title 'Average infected scenario 1' lt rgb "blue", \
 	'barabasiScenarios.dat' index 1 using 1:2 smooth csplines title 'Average infected scenario 2' lt rgb "red", \

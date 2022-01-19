@@ -138,7 +138,7 @@ L'échelle de temps utilisé sera le jour.
 
    Attention : La réalisation d'un scénario autour des valeurs critiques est sensible aux conditions initiales. Simulez plusieurs fois chaque scénario afin d'identifier le déroulement typique.
 
-![évolution de la propagation du virus en fonction du temps dans le réseau](/gnuplot/propagation/Scenario.png)
+![évolution de la propagation du virus en fonction du temps dans le réseau](./gnuplot/propagation/Scenario.png)
 
    **DONE**
 
@@ -166,7 +166,7 @@ Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que cel
 
 5. Simulez l'épidémie avec les mêmes hypothèses et les mêmes scénarios dans un réseau aléatoire et un réseau généré avec la méthode d'attachement préférentiel de la même taille et le même degré moyen. Comparez et commentez les résultats.  
 
-![évolution de la propagation du virus en fonction du temps dans un graph aléatoire](/gnuplot/propagation/aleaScenarios.png)
+![évolution de la propagation du virus en fonction du temps dans un graph aléatoire](./gnuplot/propagation/aleaScenarios.png)
 
-![évolution de la propagation du virus en fonction du temps dans un graph généré par le générateur Barabasi Albert](/gnuplot/propagation/barabasiScenario.png)
+![évolution de la propagation du virus en fonction du temps dans un graph généré par le générateur Barabasi Albert](./gnuplot/propagation/barabasiScenario.png)
 **DOING**
