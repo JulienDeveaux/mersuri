@@ -143,11 +143,11 @@ L'échelle de temps utilisé sera le jour.
    **DONE**
 
 
-3. Pour justifier l'efficacité de l'immunisation sélective, calculez le degré moyen des groupes 0 et 1. Comment expliquez-vous la différence ?  
+3. Pour justifier l'efficacité de l'immunisation sélective, calculez le degré moyen des groupes 0 et 1. Comment expliquez-vous la différence ?
 
-Moyenne Gr0 : 4.48
+Moyenne Gr0 : 6.63
 
-Moyenne Gr1 : 7.7
+Moyenne Gr1 : 10.47
 
 La différence entre ces groupes est que le groupe 1 immunisé ayant un plus grand nombre de voisins, permets de ralentir plus efficacement le virus, en immunisant les noeuds à plus fort degré.
 
@@ -169,4 +169,8 @@ Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que cel
 ![évolution de la propagation du virus en fonction du temps dans un graph aléatoire](./gnuplot/propagation/aleaScenarios.png)
 
 ![évolution de la propagation du virus en fonction du temps dans un graph généré par le générateur Barabasi Albert](./gnuplot/propagation/barabasiScenario.png)
-**DOING**
+
+Nous observons que les courbes du réseau aléatoire est beaucoup plus similaire pour les scénarios 2 et 3 que pour les autres réseaux.
+Nous observons également que dans le réseau généré par la méthode de l'attachement préférentiel, les scénarios 2 et 3 ont des valeurs qui tendent vers un même point.
+De plus, pour chacun de ces réseaux, le scénario 1 obtiens des résultats similaires.
+**DONE**

@@ -300,18 +300,16 @@ public class RI {
         /* Simulations */
         scenario1(graph, 0);
         scenario2(graph,0);
-        scenario3(graph,1);
+        scenario3(graph,0);
 
         /* Fin simulations */
 
-
         try {
-            t1.join();
+            //t1.join();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        System.out.println("Génération aléa");
         Graph graphAlea = new SingleGraph("RandomGraph");
         Generator gen2 = new RandomGenerator(degreMoyen);
         gen2.addSink(graphAlea);
@@ -322,14 +320,15 @@ public class RI {
         gen2.end();
 
         System.out.println("Scénarios pour le graph généré avec le BarabasiAlbertGenerator : ");
-        scenario1(randomgraph, 5);
-        scenario2(randomgraph,5);
-        scenario3(randomgraph,5);
+        scenario1(randomgraph, 0);
+        scenario2(randomgraph,0);
+        scenario3(randomgraph,0);
 
         System.out.println("Scénarios pour le graph aléatoire : ");
         scenario1(graphAlea,0);
         scenario2(graphAlea,0);
         scenario3(graphAlea,5);
+        System.out.println("\n\n\n\n");
     }
 
     static void barabasiAlbertVariantGenerator(Graph graphGenere, int nodeCount, float probabilite) {
@@ -456,23 +455,23 @@ public class RI {
     static void scenario2 (Graph graph, int nbPasse) {
         /* --- On réussit à convaincre 50 % des individus de mettre à jour en permanence leur anti-virus (immunisation aléatoire) --- */
         int[][] resultats = new int[nbPasse][90];
-        for(int f = 0; f < nbPasse; f++) {
+        for (int f = 0; f < nbPasse; f++) {
             graph.getNode(0).setAttribute("I", true);   // Le noeud 0 est le patient 0
-            graph.getNode(0).setAttribute("flush", (int)(Math.random()*14));
+            graph.getNode(0).setAttribute("flush", (int) (Math.random() * 14));
             graph.getNode(0).setAttribute("j", 0);
             graph.getNode(0).setAttribute("immu", false);
-            for(int j = 0; j < graph.getNode(0).getDegree(); j++) {
-                graph.getNode(0).setAttribute("mail"+j, (int)(Math.random()*7));
+            for (int j = 0; j < graph.getNode(0).getDegree(); j++) {
+                graph.getNode(0).setAttribute("mail" + j, (int) (Math.random() * 7));
             }
-            for(int i = 1; i < graph.getNodeCount(); i++) {
+            for (int i = 1; i < graph.getNodeCount(); i++) {
                 Node n = graph.getNode(i);
                 n.setAttribute("I", false);
-                n.setAttribute("flush", (int)(Math.random()*14));   //Mise a jour pas en même temps pour tous le monde
+                n.setAttribute("flush", (int) (Math.random() * 14));   //Mise a jour pas en même temps pour tous le monde
                 n.setAttribute("j", -1);                     //A été infecté quel jour
-                for(int j = 0; j < graph.getNode(i).getDegree(); j++) {
-                    n.setAttribute("mail"+j, (int)(Math.random()*7));
+                for (int j = 0; j < graph.getNode(i).getDegree(); j++) {
+                    n.setAttribute("mail" + j, (int) (Math.random() * 7));
                 }
-                if(Math.random()>0.5) {
+                if (Math.random() > 0.5) {
                     n.setAttribute("immu", true);
                 } else {
                     n.setAttribute("immu", false);
@@ -486,22 +485,6 @@ public class RI {
                     Node n = graph.getNode(j);
 
                     if (n.getAttribute("flush").equals(0)) {             // Si c'est le jour de l'antivirus
-                        List<Node> voisins = new ArrayList<>();
-                        for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
-                            voisins.add(n.getEdge(h).getOpposite(n));
-                        }
-                        for (int h = 0; h < voisins.size(); h++) {
-                            if (n.getAttribute("mail" + h).equals(0)) {
-                                n.setAttribute("mail" + h, (int) (Math.random() * 7));
-                                if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i)) {
-                                    voisins.get(h).setAttribute("I", true);
-                                    voisins.get(h).setAttribute("j", i);
-                                    nbContamines++;
-                                }
-                            } else {
-                                n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
-                            }
-                        }
                         if (n.getAttribute("I").equals(true) && !n.getAttribute("j").equals(i)) {
                             n.setAttribute("I", false);
                             nbContamines--;
@@ -531,15 +514,16 @@ public class RI {
                 System.out.println("NbContaminés jour " + i + " : " + nbContamines);
             }
             System.out.println("Pourcentage contaminé : " + (1.0*nbContamines/graph.getNodeCount())*100);
+            nbContamines = 1;
         }
         System.out.println("Résumé en moyenne scénario 2 : ");
-        for(int i = 0; i < 90 && nbPasse > 0; i++) {
+        for (int i = 0; i < 90 && nbPasse > 0; i++) {
             int moy = 0;
-            for(int j = 0; j < nbPasse; j++) {
+            for (int j = 0; j < nbPasse; j++) {
                 moy += resultats[j][i];
             }
-            moy/=nbPasse;
-            System.out.println((i+1) + " " + moy);
+            moy /= nbPasse;
+            System.out.println((i + 1) + " " + moy);
         }
     }
 
@@ -565,8 +549,8 @@ public class RI {
                 for(int j = 0; j < graph.getNode(i).getDegree(); j++) {
                     n.setAttribute("mail"+j, (int)(Math.random()*7));
                 }
-                if(Math.random()>0.5) {
-                    int pos = (int)Math.random() * n.getDegree();
+                if(Math.random()>0.5 && n.getDegree() > 0) {
+                    int pos = (int) (Math.random() * n.getDegree());
                     n.getEdge(pos).getOpposite(n).setAttribute("immu", true);
                 }
             }
@@ -578,22 +562,6 @@ public class RI {
                     Node n = graph.getNode(j);
 
                     if (n.getAttribute("flush").equals(0)) {             // Si c'est le jour de l'antivirus
-                        List<Node> voisins = new ArrayList<>();
-                        for (int h = 0; h < n.getDegree(); h++) {      // Recherche des voisins
-                            voisins.add(n.getEdge(h).getOpposite(n));
-                        }
-                        for (int h = 0; h < voisins.size(); h++) {
-                            if (n.getAttribute("mail" + h).equals(0)) {
-                                n.setAttribute("mail" + h, (int) (Math.random() * 7));
-                                if (n.getAttribute("I").equals(true) && voisins.get(h).getAttribute("I").equals(false) && !n.getAttribute("j").equals(i)) {
-                                    voisins.get(h).setAttribute("I", true);
-                                    voisins.get(h).setAttribute("j", i);
-                                    nbContamines++;
-                                }
-                            } else {
-                                n.setAttribute("mail" + h, (int) n.getAttribute("mail" + h) - 1);
-                            }
-                        }
                         if (n.getAttribute("I").equals(true) && !n.getAttribute("j").equals(i)) {
                             n.setAttribute("I", false);
                             nbContamines--;
@@ -623,6 +591,7 @@ public class RI {
                 System.out.println("NbContaminés jour " + i + " : " + nbContamines);
             }
             System.out.println("Pourcentage contaminé : " + (1.0*nbContamines/graph.getNodeCount())*100);
+            nbContamines = 1;
         }
         System.out.println("Résumé en moyenne scénario 3 : ");
         for(int i = 0; i < 90 && nbPasse > 0; i++) {
