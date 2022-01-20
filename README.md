@@ -145,9 +145,9 @@ L'échelle de temps utilisé sera le jour.
 
 3. Pour justifier l'efficacité de l'immunisation sélective, calculez le degré moyen des groupes 0 et 1. Comment expliquez-vous la différence ?
 
-Moyenne Gr0 : 6.63
+Moyenne Gr0 : 6.6211805
 
-Moyenne Gr1 : 10.47
+Moyenne Gr1 : 18.52754
 
 La différence entre ces groupes est que le groupe 1 immunisé ayant un plus grand nombre de voisins, permets de ralentir plus efficacement le virus, en immunisant les noeuds à plus fort degré.
 
