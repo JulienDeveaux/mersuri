@@ -156,9 +156,9 @@ La différence entre ces groupes est que le groupe 1 immunisé ayant un plus gra
 
 4. Du point de vue du virus l'immunisation d'un nœud est équivalente à sa suppression du réseau. Calculez le seuil épidémique du réseau modifié pour chacune des deux stratégies d'immunisation et comparez avec le seuil épidémique du réseau initial.  
 
-Ici, pour le premier scénario, $`<k> = 82203`$ et $`<k²> = 6757333209`$. Pour le second scénario, $`<k> = 163158`$ et $`<k²> = 26620532964`$.
-- Le seuil épidémique du réseau lors de la première stratégie est de **1.21e<sup>-5</sup>** qui est inférieur à 2, le taux de propagation du virus. L'épidémie va donc se propager.
-- Le seuil épidémique du réseau lors de la deuxième stratégie est de **6.12e<sup>-6</sup>** qui est inférieur à 2, l'épidémie va donc se propager.
+Ici, pour le second scénario, $`<k> = 3.7311485`$ et $`<k²> = 40.237446`$. Pour le troisième scénario, $`<k> = 1.8720329`$ et $`<k²> = 10.990591`$.
+- Le seuil épidémique du réseau lors de la seconde stratégie est de **0.0927282636179** qui est inférieur à 2, le taux de propagation du virus. L'épidémie va donc se propager.
+- Le seuil épidémique du réseau lors de la troisième stratégie est de **0.17033050361** qui est inférieur à 2, l'épidémie va donc se propager.
 
 Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que celui du scénario 2, il y aura donc théoriquement plus de cas dans le scénario 3, ce qui est le cas.
 
@@ -173,4 +173,5 @@ Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que cel
 Nous observons que les courbes du réseau aléatoire est beaucoup plus similaire pour les scénarios 2 et 3 que pour les autres réseaux.
 Nous observons également que dans le réseau généré par la méthode de l'attachement préférentiel, les scénarios 2 et 3 ont des valeurs qui tendent vers un même point.
 De plus, pour chacun de ces réseaux, le scénario 1 obtiens des résultats similaires.
+
 **DONE**
