@@ -170,8 +170,11 @@ Nous voyons ici, que le seuil épidémique du scénario 3 est plus petit que cel
 
 ![évolution de la propagation du virus en fonction du temps dans un graph généré par le générateur Barabasi Albert](./gnuplot/propagation/barabasiScenario.png)
 
-Nous observons que les courbes du réseau aléatoire est beaucoup plus similaire pour les scénarios 2 et 3 que pour les autres réseaux.
-Nous observons également que dans le réseau généré par la méthode de l'attachement préférentiel, les scénarios 2 et 3 ont des valeurs qui tendent vers un même point.
+Nous observons que les courbes du réseau aléatoire sont très similaires pour les scénarios 2 et 3.
+
+Nous observons également que dans le réseau généré par la méthode de l'attachement préférentiel, les scénarios 2 et 3 ont des valeurs qui tendent vers un point plus rapproché que les autres réseaux.
 De plus, pour chacun de ces réseaux, le scénario 1 obtiens des résultats similaires.
+
+Dans tous les réseaux, le scénario 1 obtiens approximativement les mêmes résultats.
 
 **DONE**
